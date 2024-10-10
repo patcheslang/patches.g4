@@ -1,8 +1,8 @@
-# PRELECT.g4
+# patches.g4
 
 ## Description
 
-This is the antlr4-compatible EBNF syntax for the PRELECT programming language
+This is the antlr4-compatible EBNF syntax for the patches programming language
 project.
 
 ## Getting Started

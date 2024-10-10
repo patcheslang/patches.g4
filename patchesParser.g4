@@ -1,6 +1,6 @@
-parser grammar prelectParser;
+parser grammar patchesParser;
 
-options { tokenVocab = prelectLexer; }
+options { tokenVocab = patchesLexer; }
 
 parse: (patchDef | freeFormulaic)* EOF;
 

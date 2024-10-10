@@ -1,4 +1,4 @@
-lexer grammar prelectLexer;
+lexer grammar patchesLexer;
 
 channels { COMMENTS, HASHBANG }
 

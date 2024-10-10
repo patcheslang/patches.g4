@@ -1,8 +1,8 @@
 import fs from "fs";
 
 import antlr4 from 'antlr4';
-import Lexer from '../dist/prelectLexer.js';
-import Parser from '../dist/prelectParser.js';
+import Lexer from '../dist/patchesLexer.js';
+import Parser from '../dist/patchesParser.js';
 
 export default class Test {
   constructor() {

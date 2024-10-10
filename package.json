@@ -1,22 +1,22 @@
 {
-  "name": "@prelect/prelect.g4",
-  "version": "2027.0.4",
-  "description": "This is the antlr4-compatible EBNF syntax for the PRELECT programming language project.",
+  "name": "@patches/patches.g4",
+  "version": "2027.0.5",
+  "description": "This is the antlr4-compatible EBNF syntax for the patches programming language project.",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "getJar": "curl https://www.antlr.org/download/antlr-4.13.1-complete.jar --create-dirs -o ./antlr.jar",
-    "build": "java -jar ./antlr.jar -Dlanguage=JavaScript -o dist prelectLexer.g4 prelectParser.g4",
-    "tree": "antlr4-parse ./prelectLexer.g4 ./prelectParser.g4 parse ./test/test.en.xpl -tree",
-    "gui": "antlr4-parse ./prelectLexer.g4 ./prelectParser.g4 parse ./test/test.en.xpl -gui",
-    "test": "antlr4-parse ./prelectLexer.g4 ./prelectParser.g4 parse ./test/test.en.xpl -tree",
-    "trace": "antlr4-parse ./prelectLexer.g4 ./prelectParser.g4 parse ./test/test.en.xpl -trace",
-    "tokens": "antlr4-parse ./prelectLexer.g4 ./prelectParser.g4 parse ./test/test.en.xpl -tokens",
+    "getJar": "curl https://www.antlr.org/download/antlr-4.13.2-complete.jar --create-dirs -o ./antlr.jar",
+    "build": "java -jar ./antlr.jar -Dlanguage=JavaScript -o dist patchesLexer.g4 patchesParser.g4",
+    "tree": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tree",
+    "gui": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -gui",
+    "test": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tree",
+    "trace": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -trace",
+    "tokens": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tokens",
     "syntax": "node ./test/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/prelect/prelect.g4.git"
+    "url": "git+https://github.com/patcheslang/patches.g4.git"
   },
   "keywords": [
     "antlr4",
@@ -25,10 +25,10 @@
   "author": "frithsun",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/prelect/prelect/issues"
+    "url": "https://github.com/patcheslang/patches/issues"
   },
-  "homepage": "https://github.com/prelect/prelect.g4#readme",
+  "homepage": "https://github.com/patcheslang/patches#readme",
   "dependencies": {
-    "antlr4": "^4.13.1-patch-1"
+    "antlr4": "^4.13.2"
   }
 }
