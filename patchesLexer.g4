@@ -2,6 +2,7 @@ lexer grammar patchesLexer;
 
 channels { COMMENTS, HASHBANG }
 
+
 BraceOpen: '<';
 BraceClose: '>';
 
@@ -11,18 +12,19 @@ ParenClose: ')';
 TableOpen: '[';
 TableClose: ']';
 
-FormulaChar: [-~!@#$%^&*_+=|<\\./?]+ ParenOpen;
+FormulaChar: [-~!@#$%^&*_+=\\./?]+ ParenOpen;
 
 Input: '%%%%%';
 Model: '%%%%';
 Matched: '%%%';
-Context: '%%';
+Caught: '%%';
 Placeholder: '%';
 Star: '*';
 Bang: '!';
 Dot: '.';
 Assign: ':';
 Comma: ',';
+RowDivider: '|';
 Semicolon: ';';
 ParentCall: '\\\\';
 
@@ -33,11 +35,11 @@ TypeTable: '#';
 TypeBoolean: '&';
 TypeString: '$';
 
-HexInteger: '-'? '0' [xX] [0-9a-fA-F]+;
-OctalInteger: '-'? '0' [0-7]+;
-DecimalInteger: '-'? ('0' ~[8-9] | [1-9]+);
+HexInteger: '-'? '0' [xX] [0-9a-fA-F] [0-9a-fA-F_]*;
+OctalInteger: '-'? '0' [0-7] [0-7]*;
+DecimalInteger: '-'? ('0' ~[8-9] | [1-9] [1-9_]*);
 
-Decimal: '-'? [1-9] ('.' [0-9]* Exponent? | [0-9]+ Exponent? | [0-9] Exponent?);
+Decimal: '-'? [0-9] ('.' [0-9_]* Exponent? | [0-9_]+ Exponent? | [0-9_] Exponent?);
 
 fragment Exponent: [eE] [+-]? [0-9]+;
 
@@ -59,7 +61,7 @@ PATH_Parent_Open: '../' -> pushMode(PATH);
 PATH_Current_Open: './' -> pushMode(PATH);
 
 PATTERN_Open: '\\' -> pushMode(PATTERN);
-LITERAL_OPEN: '\'' -> pushMode(LITERAL);
+
 MESSAGE_OPEN: '`' -> pushMode(MESSAGE);
 
 mode ANNOTATION;
@@ -84,15 +86,7 @@ PATTERN_FieldOpen: '{' -> pushMode(DEFAULT_MODE);
 PATTERN_Literal: PATTERN_Esc | PATTERN_FieldEsc | ~[^{\\];
 PATTERN_Close: '\\' -> popMode;
 
-mode LITERAL;
-L_LiteralPart: L_LiteralLiteral+;
-L_LiteralEsc: '\'\'';
-L_LiteralFieldEsc: '\'{';
-L_LiteralFieldOpen: '{' -> pushMode(DEFAULT_MODE);
-L_LiteralLiteral: L_LiteralEsc | L_LiteralFieldEsc | ~['{];
-L_LiteralClose: '\'' -> popMode;
-
 mode MESSAGE;
-M_MessageEsc: '\'`';
-M_MessageContent: (M_MessageEsc | ~[`])+;
-M_MessageClose: '`' -> popMode;
+MESSAGE_ESC: '\\`';
+MESSAGE_CONTENT: (MESSAGE_ESC | ~[`])+;
+MESSAGE_CLOSE: '`' -> popMode;

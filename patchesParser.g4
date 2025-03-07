@@ -4,18 +4,18 @@ options { tokenVocab = patchesLexer; }
 
 parse: (patchDef | freeFormulaic)* EOF;
 
-freeFormulaic: formulaicPiped pipeTerm?;
+freeFormulaic: formulaicPiped;
 
-formulaDef: batch? CurlyOpen formulaicPiped CurlyClose;
+formula: batch? CurlyOpen formulaicPiped CurlyClose;
 formulaicPiped: formulaic piped?;
-pipeTerm: replace | return;
-return: Bang Bang;
-replace: Bang;
+pipeTerm: return | fork;
+fork: Bang Bang;
+return: Bang;
 
 piped: (Comma | Semicolon) alias? formulaicPiped;
 alias: name Assign;
 
-formulaic: field | table | number | literal | message | input | model | matched | context | placeholder | nulll | formulaCall | exceptional;
+formulaic: field | table | number | message | input | model | matched | caught | placeholder | nulll | formulaCall | exceptional;
 
 formulaCall: formulaName formulaCallItem? (Comma formulaCallItem)* ParenClose;
 formulaName: (field ParenOpen | FormulaChar+ | braceFormula);
@@ -28,14 +28,14 @@ greaterThan: BraceClose;
 input: Input;
 model: Model;
 matched: Matched;
-context: Context;
+caught: Caught;
 placeholder: Placeholder;
 
-matcher: ((field | literal | number | formulaCall | pattern | nulll ) Assign) | path;
+matcher: ((field | message | number | formulaCall | pattern | nulll ) Assign) | path;
 
 table: (batch tableData) | batch | tableData;
-tableData: tableRow+;
-tableRow: TableOpen tableField? (Comma tableField)* TableClose;
+tableData: TableOpen tableRow (RowDivider tableRow)* TableClose;
+tableRow: tableField? (Comma tableField)*;
 tableField: formulaic;
 
 catch_: BraceOpen formulaic BraceClose;
@@ -44,13 +44,13 @@ watch: Bang;
 params: ParenOpen (alias? formulaic)? (Comma alias? formulaic)* ParenClose;
 exceptional: matcher ParenOpen snatch? catch_? params? ParenClose;
 
-patchDef: matcher attach? catchType? batch? hatch annotation?;
-attach: TableOpen field TableClose;
+patchDef: matcher catchType? attach? (batch hatch | batch | hatch) annotation?;
+attach: TableOpen (field | type | nulll) TableClose;
 catchType: BraceOpen (type | nulll) BraceClose;
 
 batch: ParenOpen batchItem? (Comma batchItem)* ParenClose;
 batchItem: type? prot? priv? batchName nullable? mutable? unique? (Assign batchDefault)? annotation?;
-batchDefault: formulaic | formulaDef | nulll;
+batchDefault: formulaic | formula | nulll;
 prot: Bang;
 priv: Bang;
 nullable: Nulll;
@@ -71,7 +71,7 @@ typeFormulaic: TypeFormulaic;
 typeName: Name;
 
 name: Name;
-module: Name;
+module: Name | type;
 parentCall: ParentCall;
 field: parentCall* (module Dot)? name;
 
@@ -80,6 +80,9 @@ decimalInteger: DecimalInteger;
 decimal: Decimal;
 hexInteger: HexInteger;
 octalInteger: OctalInteger;
+
+message: MESSAGE_OPEN messageContent MESSAGE_CLOSE;
+messageContent: MESSAGE_CONTENT;
 
 annotation: ANNOTATION_OPEN annotationContent ANNOTATION_CLOSE;
 annotationContent: ANNOTATION_CONTENT;
@@ -101,12 +104,3 @@ patternModifiers: Name;
 
 patternPart: PATTERN_Part+;
 patternField: PATTERN_FieldOpen formulaic? CurlyClose;
-
-literal: LITERAL_OPEN (literalPart | literalField)* L_LiteralClose;
-literalPart: L_LiteralPart+;
-literalField: L_LiteralFieldOpen formulaic? CurlyClose;
-
-message: MESSAGE_OPEN messageContent M_MessageClose locale? messageParams?;
-messageContent: M_MessageContent*;
-locale: BraceOpen formulaic BraceClose;
-messageParams: batch;
