@@ -9,15 +9,16 @@ freeFormulaic: formulaicPiped;
 formula: batch? CurlyOpen formulaicPiped CurlyClose;
 formulaicPiped: formulaic piped?;
 pipeTerm: return | fork;
-fork: Bang Bang;
+fork: Bang Bang Bang;
+yield: Bang Bang;
 return: Bang;
 
-piped: (Comma | Semicolon) alias? formulaicPiped;
+piped: Semicolon alias? formulaicPiped;
 alias: name Assign;
 
-formulaic: field | table | number | message | input | model | matched | caught | placeholder | nulll | formulaCall | exceptional;
+formulaic: field | table | number | message | input | model | matched | caught | placeholder | nulll | formulaCall | dispatch;
 
-formulaCall: formulaName formulaCallItem? (Comma formulaCallItem)* ParenClose;
+formulaCall: formulaName formulaCallItem? (Comma formulaCallItem)* Comma? ParenClose;
 formulaName: (field ParenOpen | FormulaChar+ | braceFormula);
 formulaCallItem: alias? formulaic | pattern;
 braceFormula: ((assign | greaterThan) ParenOpen) | greaterEqual;
@@ -35,27 +36,35 @@ matcher: ((field | message | number | formulaCall | pattern | nulll ) Assign) | 
 
 table: (batch tableData) | batch | tableData;
 tableData: TableOpen tableRow (RowDivider tableRow)* TableClose;
-tableRow: tableField? (Comma tableField)*;
+tableRow: tableField? (Comma tableField)* Comma?;
 tableField: formulaic;
 
-catch_: BraceOpen formulaic BraceClose;
 snatch: TableOpen formulaic watch? TableClose;
+catch_: BraceOpen formulaic BraceClose;
 watch: Bang;
-params: ParenOpen (alias? formulaic)? (Comma alias? formulaic)* ParenClose;
-exceptional: matcher ParenOpen snatch? catch_? params? ParenClose;
+params: ParenOpen (alias? formulaic)? (Comma alias? formulaic)* Comma? ParenClose;
+dispatch: matcher ParenOpen snatch? catch_? params? ParenClose;
 
 patchDef: matcher catchType? attach? (batch hatch | batch | hatch) annotation?;
 attach: TableOpen (field | type | nulll) TableClose;
 catchType: BraceOpen (type | nulll) BraceClose;
 
-batch: ParenOpen batchItem? (Comma batchItem)* ParenClose;
-batchItem: type? prot? priv? batchName nullable? mutable? unique? (Assign batchDefault)? annotation?;
+batch: ParenOpen batchItem? (Comma batchItem)* Comma? ParenClose;
+
+batchItem: type? nullable? (mutable (visible exposed?)?)? batchName (unique | primary | incr)? (Assign batchDefault)? annotation?;
+
 batchDefault: formulaic | formula | nulll;
-prot: Bang;
-priv: Bang;
-nullable: Nulll;
-mutable: Star;
+
+nullable: Question;
+
+mutable: Bang;
+visible: Caret;
+exposed: Bang;
+
 unique: TableOpen Star TableClose;
+primary: TableOpen Star Star TableClose;
+incr: TableOpen Star Star Star TableClose;
+
 batchName: Name;
 nulll: Nulll;
 
@@ -63,7 +72,7 @@ hatch: CurlyOpen hatchItem* CurlyClose;
 hatchItem: formulaicPiped pipeTerm?;
 
 type: typeFormulaic | typeString | typeBoolean | typeTable |
-	(TypeCustom typeName) (ParenOpen formulaCallItem? (Comma formulaCallItem)* ParenClose)?;
+	(TypeCustom typeName) (ParenOpen formulaCallItem? (Comma formulaCallItem)* Comma? ParenClose)?;
 typeTable: TypeTable;
 typeBoolean: TypeBoolean;
 typeString: TypeString;

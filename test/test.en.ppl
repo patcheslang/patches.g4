@@ -1,1 +1,12 @@
-~: { %%! }
+(
+	a: 42, ## immutable, invisible
+	!b: 42, ## mutable, invisible
+	!^c: 42, ## mutable, visible
+	!^!d: 42, ## mutable, visible, exposed
+
+	?e: 42, ## nullable
+
+	f[*]: 42, ## unique
+	g[**]: 42, ## primary
+	h[***]: 42, ## incremental
+)

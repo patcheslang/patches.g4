@@ -12,15 +12,17 @@ ParenClose: ')';
 TableOpen: '[';
 TableClose: ']';
 
-FormulaChar: [-~!@#$%^&*_+=\\./?]+ ParenOpen;
+FormulaChar: [-~!@#$%^|&*+=\\./?_]+ ParenOpen;
 
 Input: '%%%%%';
 Model: '%%%%';
 Matched: '%%%';
 Caught: '%%';
 Placeholder: '%';
+Question: '?';
 Star: '*';
 Bang: '!';
+Caret: '^';
 Dot: '.';
 Assign: ':';
 Comma: ',';
@@ -35,11 +37,11 @@ TypeTable: '#';
 TypeBoolean: '&';
 TypeString: '$';
 
-HexInteger: '-'? '0' [xX] [0-9a-fA-F] [0-9a-fA-F_]*;
-OctalInteger: '-'? '0' [0-7] [0-7]*;
-DecimalInteger: '-'? ('0' ~[8-9] | [1-9] [1-9_]*);
+HexInteger: '-'? [0] [xX] [0-9a-fA-F] [0-9a-fA-F_]*;
+OctalInteger: '-'? [0] [0-7] [0-7]*;
+DecimalInteger: '-'? ([0] | [1-9] [1-9_]*);
 
-Decimal: '-'? [0-9] ('.' [0-9_]* Exponent? | [0-9_]+ Exponent? | [0-9_] Exponent?);
+Decimal: '-'? [0-9]+ ('.' [0-9_]* Exponent? | [0-9_]+ Exponent? | [0-9_] Exponent?)?;
 
 fragment Exponent: [eE] [+-]? [0-9]+;
 
