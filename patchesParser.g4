@@ -51,7 +51,7 @@ catchType: BraceOpen (type | nulll) BraceClose;
 
 batch: ParenOpen batchItem? (Comma batchItem)* Comma? ParenClose;
 
-batchItem: type? nullable? (mutable (visible exposed?)?)? batchName (unique | primary | incr)? (Assign batchDefault)? annotation?;
+batchItem: (mutable (visible exposed?)?)? nullable? type? batchName (unique | primary | incr)? (Assign batchDefault)? annotation?;
 
 batchDefault: formulaic | formula | nulll;
 
@@ -61,9 +61,9 @@ mutable: Bang;
 visible: Caret;
 exposed: Bang;
 
-unique: TableOpen Star TableClose;
-primary: TableOpen Star Star TableClose;
-incr: TableOpen Star Star Star TableClose;
+incr: Star Star Star;
+primary: Star Star;
+unique: Star;
 
 batchName: Name;
 nulll: Nulll;

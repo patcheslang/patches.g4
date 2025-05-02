@@ -1,0 +1,35 @@
+(
+	a: 42, ## immutable, invisible
+	!b: 42, ## mutable, invisible
+	!^c: 42, ## mutable, visible
+	!^!d: 42, ## mutable, visible, exposed
+
+	?e: 42, ## nullable
+
+	f*: 42, ## unique
+	g**: 42, ## primary
+	h***: 42, ## incremental
+
+	$i: `hello, world`, ## immutable, invisible
+	!$j: `hello, world`, ## mutable, invisible
+	!^$k: `hello, world`, ## mutable, visible
+	!^!$l: `hello, world`, ## mutable, visible, exposed
+
+	?$m: `hello, world`, ## nullable
+
+	$n*: `hello, world`, ## unique
+	$o**: `hello, world`, ## primary
+	$p***: `hello, world`, ## incremental
+
+	@USD q: 3.5, ## immutable, invisible
+	!@USD r: 3.5, ## mutable, invisible
+	!^@USD s: 3.5, ## mutable, visible
+	!^!@USD t: 3.5, ## mutable, visible, exposed
+
+	?@USD u: 3.5, ## nullable
+
+	@USD v*: 3.5, ## unique
+	@USD w**: 3.5, ## primary
+	@USD x***: 3.5, ## incremental
+)
+

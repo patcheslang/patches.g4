@@ -2,7 +2,6 @@ lexer grammar patchesLexer;
 
 channels { COMMENTS, HASHBANG }
 
-
 BraceOpen: '<';
 BraceClose: '>';
 
@@ -12,7 +11,7 @@ ParenClose: ')';
 TableOpen: '[';
 TableClose: ']';
 
-FormulaChar: [-~!@#$%^|&*+=\\./?_]+ ParenOpen;
+FormulaChar: ('xy' | [-~<>!@#$%^|&*+=\\./?_]+) ParenOpen;
 
 Input: '%%%%%';
 Model: '%%%%';
