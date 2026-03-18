@@ -1,0 +1,14 @@
+## 1. Define the System Schema
++ /users: ( $username*, &is_active );
++ /files: ( $"File Name"*, $content, @KB size );
++ /sys/logs: ( @Timestamp time, $event, $level );
+
+## 2. Initialize System Data
+/users: ( username: `admin`, is_active: 1 );
+/users: ( username: `frith`, is_active: 1 );
+
+/files: ( "File Name": `kernel.sys`, content: `0xCAFEBEEF`, size: 1024.5 );
+/files: ( "File Name": `user.txt`, content: `Hello Patches!`, size: 0.5 );
+
+/sys/logs: ( time: 1710720000, event: `SYSTEM_BOOT`, level: `INFO` );
+/sys/logs: ( time: 1710720060, event: `LOGIN_ADMIN`, level: `AUTH` );

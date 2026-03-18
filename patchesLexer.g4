@@ -50,14 +50,16 @@ DecimalInteger: '-'? ([0] | [1-9] [1-9_]*);
 Decimal: '-'? [0-9]+ ('.' [0-9_]* Exponent? | [0-9_]+ Exponent? | [0-9_] Exponent?)?;
 fragment Exponent: [eE] [+-]? [0-9]+;
 
-Name: ([\p{L}_-] [\p{L}\p{N}_-]*) | '"' ~["\r\n]*  '"';
+// Identifiers
+Name: [\p{L}_-] [\p{L}\p{N}_-]*;
+QuotedName: '"' ~["\r\n]* '"';
 
 Ws: [\p{White_Space}]+ -> skip;
 Comment: '##' ~[\r\n]* -> channel(COMMENTS);
 HashBang: '#!' ~[\r\n]* -> channel(HASHBANG);
 
 ANNOTATION_OPEN: '#:' -> pushMode(ANNOTATION);
-MESSAGE_OPEN: '`' -> pushMode(MESSAGE);
+STRING_OPEN: '`' -> pushMode(STRING_MODE);
 PATTERN_Open: '|/' -> pushMode(PATTERN);
 
 PATH_Relative_Open: '//' -> pushMode(PATH);
@@ -69,10 +71,11 @@ mode ANNOTATION;
 ANNOTATION_CONTENT: (':' ~[#] | ~[:])+;
 ANNOTATION_CLOSE: ':#' -> popMode;
 
-mode MESSAGE;
-MESSAGE_ESC: '\\`';
-MESSAGE_CONTENT: (MESSAGE_ESC | ~[`])+;
-MESSAGE_CLOSE: '`' -> popMode;
+mode STRING_MODE;
+STRING_ESC: '\\`';
+STRING_INTERP_OPEN: '{' -> pushMode(DEFAULT_MODE);
+STRING_CONTENT: (STRING_ESC | ~[`{])+;
+STRING_CLOSE: '`' -> popMode;
 
 mode PATH;
 PATH_Name: PATH_Literal+;

@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "getJar": "curl https://www.antlr.org/download/antlr-4.13.2-complete.jar --create-dirs -o ./antlr.jar",
-    "build": "java -jar ./antlr.jar -Dlanguage=JavaScript -o dist patchesLexer.g4 patchesParser.g4",
+    "build": "java -jar ./antlr.jar -Dlanguage=JavaScript -visitor -o dist patchesLexer.g4 patchesParser.g4",
     "tree": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tree",
     "gui": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -gui",
-    "test": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tree",
+    "test": "node --test test/**/*.test.js",
     "trace": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -trace",
     "tokens": "antlr4-parse ./patchesLexer.g4 ./patchesParser.g4 parse ./test/test.en.ppl -tokens",
     "syntax": "node ./test/test.js"
