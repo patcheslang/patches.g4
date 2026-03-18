@@ -1,0 +1,11 @@
+## Case 1: Regex Patterns with Modifiers
+|/^[a-z0-9_-]+ /| gi;
+
+## Case 2: Pattern in Dispatch
+$input |> |/\d+/| ( "Match found!" );
+
+## Case 3: Pattern Fields (Dynamic Patterns)
++ |/^user_{ $id }_pattern /|: "Match";
+
+## Case 4: Complex Pattern Dispatch
+/users/name |> |/^[A-Z][a-z]+ /| [ //info ] { !!("Name valid") };

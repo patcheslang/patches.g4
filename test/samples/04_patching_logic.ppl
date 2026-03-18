@@ -1,0 +1,15 @@
+## Case 1: Simple Value Patch
++ /users/admin/role: "super-user";
+
+## Case 2: Attaching Schema to a Path
++ /users/{ $id }: ( !^$email, ?^&active );
+
+## Case 3: Complex Patch with Snatch and Catch
++ /users/{ $id }: [ //last_login! ] {
+    !!($id, "Logged in!")
+};
+
+## Case 4: Custom Type Patching
++ /transactions/{ $id }: [ @USD amount, @Date timestamp ] {
+    amount |> __("validate") |> !
+};

@@ -1,0 +1,25 @@
+## Case 1: Complex User Schema
++ (
+    !^$id**,
+    !^$username*,
+    ?^$email,
+    ^&is_admin: false,
+    !@Timestamp created_at***
+);
+
+## Case 2: Nested Data (Product Item)
++ product: (
+    $sku**,
+    @USD price: 19.99,
+    [
+        ( $name: "Red", $stock: 100 ) |
+        ( $name: "Blue", $stock: 50 )
+    ] variants
+);
+
+## Case 3: Mixed visibility/exposure (The "Shadow" batch)
++ (
+    !^!exposed_val: 1,
+    !^hidden_val: 2,
+    !internal_val: 3
+);
