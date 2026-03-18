@@ -1,9 +1,11 @@
 export default class PathResolver {
   /**
-   * Translates a Patches path (/users/1) into a SQLite-compatible table/context name.
+   * Sanitizes a Patches path (/users/1) into a standard normalized string.
    */
-  static resolve(pathText) {
-    // Strip leading dots and slashes (./, ../, /, //)
-    return pathText.replace(/^[./\\]+/, "").replace(/\//g, "_");
+  static sanitize(pathText) {
+    // Standardize leading slashes and separators
+    let normalized = pathText.replace(/^[./\\]+/, "/");
+    if (!normalized.startsWith("/")) normalized = "/" + normalized;
+    return normalized;
   }
 }

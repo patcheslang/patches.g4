@@ -11,18 +11,20 @@ export default class Runtime {
   /**
    * Main entry point for definition statements (+)
    */
-  define(path, schema) {
-    const name = PathResolver.resolve(path);
-    this.#adapter.createTable(name, schema);
+  define(pathText, schema) {
+    const sanitizedPath = PathResolver.sanitize(pathText);
+    const internalId = this.#adapter.resolveInternalId(sanitizedPath);
+    this.#adapter.createTable(internalId, schema);
     return true;
   }
 
   /**
    * Main entry point for data updates (patches)
    */
-  patch(path, data) {
-    const name = PathResolver.resolve(path);
-    this.#adapter.upsert(name, data);
+  patch(pathText, data) {
+    const sanitizedPath = PathResolver.sanitize(pathText);
+    const internalId = this.#adapter.resolveInternalId(sanitizedPath);
+    this.#adapter.upsert(internalId, data);
     return true;
   }
 
@@ -31,8 +33,9 @@ export default class Runtime {
     return this.#adapter.query(sql, params);
   }
 
-  getTableSchema(path) {
-    const name = PathResolver.resolve(path);
-    return this.#adapter.getTableInfo(name);
+  getTableSchema(pathText) {
+    const sanitizedPath = PathResolver.sanitize(pathText);
+    const internalId = this.#adapter.resolveInternalId(sanitizedPath);
+    return this.#adapter.getTableInfo(internalId);
   }
 }
