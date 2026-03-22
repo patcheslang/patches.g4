@@ -6,10 +6,10 @@ export default class DataVisitor extends patchesParserVisitor {
     const items = ctx.batchItem();
     
     items.forEach(item => {
-      const idCtx = item.identifier();
+      const idCtx = item.identifier ? item.identifier() : null;
       const name = idCtx?.getText();
       if (name) {
-        if (item.Assign()) {
+        if (item.Colon && item.Colon()) {
           const formulaicVal = item.formulaic();
           data[this.#cleanName(name)] = this.#getLiteralValue(formulaicVal);
         } else {
@@ -29,11 +29,17 @@ export default class DataVisitor extends patchesParserVisitor {
   }
 
   #getLiteralValue(ctx) {
-    const base = ctx.base();
-    const value = base.value();
+    const atoms = ctx.atom();
+    if (!atoms || atoms.length === 0) return ctx.getText();
+    const base = atoms[0].base();
+    const value = base.value ? base.value() : null;
     if (value) {
       if (value.stringLiteral()) {
-        return value.stringLiteral().getText().slice(1, -1);
+        const text = value.stringLiteral().getText();
+        if (text.startsWith('`') && text.endsWith('`')) {
+          return text.slice(1, -1);
+        }
+        return text;
       }
       if (value.field()) {
         const fieldText = value.field().getText();

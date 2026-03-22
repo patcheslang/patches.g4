@@ -18,12 +18,16 @@ export default class Transpiler extends patchesParserVisitor {
   }
 
   visitStatement(ctx) {
+    let result = "";
     if (ctx.patchDef()) {
-      return this.#defVisitor.visitPatchDef(ctx.patchDef());
+      result = this.#defVisitor.visitPatchDef(ctx.patchDef());
+    } else if (ctx.expression()) {
+      result = this.#exprVisitor.visitExpression(ctx.expression());
     }
-    if (ctx.expression()) {
-      return this.#exprVisitor.visitExpression(ctx.expression());
+    
+    if (result && !result.endsWith(';') && !result.startsWith('//')) {
+      result += ';';
     }
-    return "";
+    return result;
   }
 }

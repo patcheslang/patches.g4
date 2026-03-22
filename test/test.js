@@ -4,13 +4,15 @@ import antlr4 from "antlr4";
 import Lexer from "../dist/patchesLexer.js";
 import Parser from "../dist/patchesParser.js";
 
-const samplesDir = "./test/samples";
-const files = fs.readdirSync(samplesDir).filter(f => f.endsWith(".ppl")).sort();
+const testDir = "./test/canonical";
+const files = fs.readdirSync(testDir)
+    .filter(f => f.endsWith(".ppl"))
+    .sort();
 
-console.log("=== RUNNING OFFICIAL SAMPLES ===");
+console.log("=== CANONICAL SYNTAX CHECK ===");
 
 files.forEach(file => {
-    const filePath = path.join(samplesDir, file);
+    const filePath = path.join(testDir, file);
     const content = fs.readFileSync(filePath, "utf8");
     
     const chars = new antlr4.InputStream(content);
@@ -19,9 +21,11 @@ files.forEach(file => {
     const parser = new Parser(tokens);
     
     parser.removeErrorListeners();
+    let hasError = false;
     parser.addErrorListener({
         syntaxError: (recognizer, offendingSymbol, line, column, msg, e) => {
-            console.error(`  [SYNTAX ERROR] ${file}:${line}:${column} - ${msg}`);
+            hasError = true;
+            console.error(`  [FAIL] ${file}:${line}:${column} - ${msg}`);
         },
         reportAmbiguity: () => {},
         reportAttemptingFullContext: () => {},
@@ -30,12 +34,10 @@ files.forEach(file => {
 
     try {
         parser.parse();
-        if (parser.syntaxErrorsCount === 0) {
+        if (!hasError) {
             console.log(`  [PASS] ${file}`);
-        } else {
-            console.log(`  [FAIL] ${file} (${parser.syntaxErrorsCount} errors)`);
         }
     } catch (e) {
-        console.error(`  [FATAL ERROR] ${file}:`, e.message);
+        console.error(`  [FATAL] ${file}:`, e.message);
     }
 });

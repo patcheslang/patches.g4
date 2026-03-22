@@ -45,36 +45,50 @@ The **Batch** is the data payload or schema.
 
 ### III. HATCH (`{}`)
 The **Hatch** is the reactive logic. When data is patched into a path, the Hatch "opens" to execute logic locally on that path.
+- **`!` (Yield)**: Pulse a value to the pipeline without stopping.
+- **`!!` (Return)**: Commit state changes and exit the Hatch.
+- **`!!!` (Abort)**: Rollback changes and terminate the Hatch immediately.
 
 ### IV. MATCH (`|/ /|`)
 The **Match** is the integrated regex filter.
 
-### V. SNATCH (`[]`)
-The **Snatch** is the retrieval mechanism. It "grabs" data from a path (translates to SQL `SELECT`).
+### V. CATCH / TABLE (`[]`)
+The **Table** (or Catch) is the data collection mechanism. When attached to a Batch, it acts as the driver or generator that feeds data into the structural definition. It projects ranges or query results into tabular structures.
 
 ---
 
-## 3. The Imperative Engine: Formulas & Pipes
+## 3. The Relational Pipeline
 
-Logic in Patches is driven by **Formulas** and the **Pipeline operator (`|>`)**.
+Logic in Patches is driven by **Formulas** and the **Pipeline operator (`|>`)**. Pipelines are state-aware and resolve conditionally.
 
 ```ppl
-## Stream a string into a transformation and yield the result
-`Hello World` |> lower() |> yield();
+## FizzBuzz as a Relational Literal
+(
+    i, 
+    o: i |> ?(!(%(15)), `fizzbuzz`) 
+         |> ?(!(%(5)), `fizz`) 
+         |> ?(!(%(3)), `buzz`) 
+         |> i
+) [ ..(100) ]
 ```
 
 ---
 
 ## 4. Sophisticated Literals
 
+### Named Heredocs (The "Universal Host")
+For large blocks of unescaped text (SQL, HTML, JSON), use Named Heredocs.
+- **Example**: 
+  ```ppl
+  + /db/query: <<<SQL
+    SELECT * FROM users WHERE active = 1;
+  SQL>>>;
+  ```
+
 ### Human-Readable Identifiers
 - **Double Quotes (`"`)**: Used for identifiers with spaces. 
 - **Example**: `+ ( $"Account Balance": @USD 100.00 );`
-
-### Recursive String Interpolation
-- **Backticks (`` ` ``)**: Used for strings.
-- **Interpolation (`{}`)**: Strings can embed any Patches expression recursively.
-- **Example**: `` `Welcome, {$user [ name ]}!` ``
+- **Flexible Names**: Identifiers like `2girls` are valid, provided they aren't pure numbers.
 
 ---
 

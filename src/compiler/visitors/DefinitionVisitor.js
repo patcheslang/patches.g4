@@ -6,19 +6,28 @@ export default class DefinitionVisitor extends patchesParserVisitor {
 
   visitPatchDef(ctx) {
     const formulaicCtx = ctx.formulaic();
-    const baseText = formulaicCtx.base().getText();
+    const atoms = formulaicCtx.atom();
+    if (!atoms || atoms.length === 0) return "";
+    
+    const firstAtom = atoms[0];
+    const baseText = firstAtom.base().getText();
     let tableName = baseText;
     let schema = null;
 
-    const suffixes = formulaicCtx.suffix();
+    const suffixes = firstAtom.suffix();
     suffixes.forEach(suffix => {
       if (suffix.batch()) {
         schema = this.#dataVisitor.visitBatch(suffix.batch());
-      } else if (suffix.Assign()) {
+      } else if (suffix.Colon()) {
         const assignedFormulaic = suffix.formulaic();
-        const batchBody = assignedFormulaic?.base()?.block()?.batch();
-        if (batchBody) {
-          schema = this.#dataVisitor.visitBatch(batchBody);
+        if (assignedFormulaic) {
+          const innerAtoms = assignedFormulaic.atom();
+          if (innerAtoms.length > 0) {
+            const batchBody = innerAtoms[0].base()?.block()?.batch();
+            if (batchBody) {
+              schema = this.#dataVisitor.visitBatch(batchBody);
+            }
+          }
         }
       }
     });

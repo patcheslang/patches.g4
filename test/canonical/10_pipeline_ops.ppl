@@ -1,0 +1,4 @@
+`TINY TIM` |> lower();
+`TINY TIM` |> replace(`TIM`, `TOM`, %);
+`hello` |> upper() |> reverse();
+100 |> MOD(%, 3);
